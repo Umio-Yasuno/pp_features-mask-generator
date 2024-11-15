@@ -5,7 +5,9 @@ fn main() {
     let args = std::env::args().skip(1).collect::<Vec<String>>();
     let sysfs = args
         .iter()
-        .find(|s| !s.starts_with(&['-', '+']))
+        .find(|s| !s.starts_with(&['-', '+']));
+    let dump = (sysfs.is_some() && args.len() == 1) || args.is_empty();
+    let sysfs = sysfs
         .map(|s| s.clone())
         .unwrap_or(String::from("/sys/class/drm/card0/device"));
 
@@ -32,7 +34,7 @@ fn main() {
         Some((name, pos))
     }).collect();
 
-    if args.is_empty() {
+    if dump {
         println!("{s}");
         return;
     }
